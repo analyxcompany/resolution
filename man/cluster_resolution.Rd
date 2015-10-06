@@ -2,7 +2,7 @@
 % Please edit documentation in R/cluster_resolution.R
 \name{cluster_resolution}
 \alias{cluster_resolution}
-\title{cluster_resloution}
+\title{cluster_resolution}
 \usage{
 cluster_resolution(graph, t = 1, directed = FALSE)
 }
@@ -17,7 +17,13 @@ cluster_resolution(graph, t = 1, directed = FALSE)
 Table with information about community which has been found for each node.
 }
 \description{
-Algorithm which finds communities using stability as an objective function to be optimised
+cluster_resolution function has been created based on paper "Laplacian dynamics and Multiscale Modular Structure in Networks" R. Lambiotte et al.
+               Algorithm which finds communities using stability as an objective function to be optimised
                  in order to find the best partition  of network.
+}
+\examples{
+library(igraph)
+g <- nexus.get("miserables")
+cluster_resolution(g,directed=FALSE,t=1)
 }
 

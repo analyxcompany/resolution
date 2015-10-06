@@ -19,7 +19,7 @@ Delta(A, Adj, Com1, Com2)
 Computes value Delta(R_NL) for each neighbor at the same time and returned vector delta with these values.
 
 Delta(R_NL) evaluates the change of stability (R_NL) by removing Com1 from its community and
-then by moving it into a neighbouring community. The node Com1 is then placed in the community for which
+then by moving it into a neighbouring community. The node Com1 is then in cluster_resolution algotithm placed in the community for which
 this gain is maximum, but only if this gain is positive.
 }
 

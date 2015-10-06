@@ -1,12 +1,6 @@
-#' Community Resloution
-#'
-#' CommunityResolution function has been created based on paper "Laplacian dynamics and Multiscale Modular Structure in Networks" R. Lambiotte et al.
-#'
-
-
 
 #' Erase
-#' @description Function for the modification of the f.i. adjacency matrix resulting from merging communities OldCom and NewCom
+#' @description Function for the modification of the f.i. adjacency matrix resulting from merging communities OldCom and NewCom,
 #' the row and column corresponding to OldCom are erased.
 #' @param A Matrix which will be modified.
 #' @param OldCom the community which the node have been.
@@ -57,7 +51,7 @@ Exp_matrix <- function(A,p)
 #'  @description Computes value Delta(R_NL) for each neighbor at the same time and returned vector delta with these values.
 #'
 #' Delta(R_NL) evaluates the change of stability (R_NL) by removing Com1 from its community and
-#' then by moving it into a neighbouring community. The node Com1 is then placed in the community for which
+#' then by moving it into a neighbouring community. The node Com1 is then in cluster_resolution algotithm placed in the community for which
 #' this gain is maximum, but only if this gain is positive.
 #' @param A Adjacency matrix
 #' @param Adj Matrix calxulated from pattern e^(t(B-I))k_j
@@ -76,13 +70,21 @@ Delta<- function(A,Adj,Com1,Com2)
 }
 
 
-#' cluster_resloution
-#' @description   Algorithm which finds communities using stability as an objective function to be optimised
-#'                  in order to find the best partition  of network.
+#' cluster_resolution
+#'
+#' @description   cluster_resolution function has been created based on paper "Laplacian dynamics and Multiscale Modular Structure in Networks" R. Lambiotte et al.
+#'                Algorithm finds communities using stability as an objective function to be optimised
+#'                  in order to find the best partition  of network. The number of communities
+#'                  typically decreases as time grows, from a partition of one-node communities which are as many as nodes when t = 0 to a
+#'                  two-way partition as t → ∞.
 #' @param graph An igraph network or a data frame of three columns: source, target, and weights.
 #' @param t The time-scale parameter of the process which uncovers community structures at different resolutions.
 #' @param directed Logical. TRUE if the network is directed. Ignored if graph is an igraph object.
 #' @return Table with information about community which has been found for each node.
+#' @examples
+#' library(igraph)
+#' g <- nexus.get("miserables")
+#' cluster_resolution(g,directed=FALSE,t=1)
 
 
 

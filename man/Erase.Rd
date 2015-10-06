@@ -2,7 +2,7 @@
 % Please edit documentation in R/cluster_resolution.R
 \name{Erase}
 \alias{Erase}
-\title{Community Resloution}
+\title{Erase}
 \usage{
 Erase(A, OldCom, NewCom)
 }
@@ -16,10 +16,5 @@ Erase(A, OldCom, NewCom)
 \description{
 Function for the modification of the f.i. adjacency matrix resulting from merging communities OldCom and NewCom
 the row and column corresponding to OldCom are erased.
-}
-\details{
-CommunityResolution function has been created based on paper "Laplacian dynamics and Multiscale Modular Structure in Networks" R. Lambiotte et al.
-
-Erase
 }
 
