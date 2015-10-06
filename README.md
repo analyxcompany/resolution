@@ -19,7 +19,7 @@ devtools::install_github("analyxcompany/resolution")
 After installation the package is loaded as usual with:
 
 ```R
-library(ForceAtlas2)
+library(resolution)
 ```
 
 This implementation accepts as inputs an `igraph` object or a data frame.
