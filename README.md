@@ -24,7 +24,7 @@ library(resolution)
 
 This implementation accepts as inputs an `igraph` object or a data frame.
 
-*igraph input**
+**igraph input**
 
 For this example I will use the coappeareance network from Les Miserables, by Victor Hugo. Get more details about this data set with `igraph::nexus.info("miserables")`
 
@@ -38,6 +38,7 @@ cluster_resolution(g,t=0.5)
 The default t parameter is 1 if you want you can change it (see second example above). 
 
 **data frame input**
+
 For those not familiar with the 'igraph' package, is possible to calculate the algorithm directly from a data frame. 
 This data frame should consist in three columns: 'from', 'to', and 'weights', indicating the corresponding nodes connections and 
 the weights.
