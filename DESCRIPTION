@@ -2,9 +2,9 @@ Package: resolution
 Type: Package
 Title: Finding communities in network using algorithm with resolution parameter
 Version: 0.1
-Authors@R: c(person("Adolfo","Alvarez",email="adolfo.alvarez@analyx.com",role=c("aut","cre")), person("Bazyli", "Klockiewicz",email="bazyli.klockiewicz@analyx.com"), person("Katarzyna","Klamecka",email="katarzyna.klamecka@analyx.com"))
+Authors@R: c( person("Bazyli", "Klockiewicz",email="bazyli.klockiewicz@analyx.com",role="aut"),person("Adolfo","Alvarez",email="adolfo.alvarez@analyx.com",role="aut"), person("Katarzyna","Klamecka",email="katarzyna.klamecka@analyx.com",role=c("aut","cre")))
 Description: cluster_resolution function has been created based on paper "Laplacian dynamics and Multiscale Modular Structure in Networks" R. Lambiotte et al.
 License: GPL-2
 LazyData: TRUE
-Imports: igraph,
-        expm
+Imports: expm
+Depends: igraph
