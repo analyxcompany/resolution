@@ -14,7 +14,7 @@ Erase(A, OldCom, NewCom)
 \item{NewCom}{the community which the node moved to.}
 }
 \description{
-Function for the modification of the f.i. adjacency matrix resulting from merging communities OldCom and NewCom
+Function for the modification of the f.i. adjacency matrix resulting from merging communities OldCom and NewCom,
 the row and column corresponding to OldCom are erased.
 }
 
