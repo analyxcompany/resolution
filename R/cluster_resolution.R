@@ -213,7 +213,7 @@ cluster_resolution <- function(graph, t = 1, directed=FALSE,RandomOrder=FALSE,re
 
 
   return (NodesGroupsL[[which.max(mod)]])
-
+#Another change
 }
 
 
