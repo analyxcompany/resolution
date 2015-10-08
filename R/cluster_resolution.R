@@ -76,24 +76,34 @@ Delta<- function(A,Adj,Com1,Com2)
 #'                Algorithm finds communities using stability as an objective function to be optimised
 #'                  in order to find the best partition  of network. The number of communities
 #'                  typically decreases as time grows, from a partition of one-node communities which are as many as nodes when t = 0 to a
-#'                  two-way partition as t → ∞.
+#'                  two-way partition as t -> inf.
 #' @param graph An igraph network or a data frame of three columns: source, target, and weights.
 #' @param t The time-scale parameter of the process which uncovers community structures at different resolutions.
 #' @param directed Logical. TRUE if the network is directed. Ignored if graph is an igraph object.
+#' @param RandomOrder If is NULL we receive the outcome based on order of vertices in graph, If is FALSE vertices will be arrange in alphabetical order, othervise vertices will be arrange in random order.
+#' @param rep If you choose random order of verticles (RandomOrder=TRUE) you can set the number of repetitions and then will be returned the best solution (which will be
+#' have the highest value of modularity) among these repetitions. In the other cases this parameter is ommited.
 #' @return Table with information about community which has been found for each node.
 #' @examples
 #' library(igraph)
 #' g <- nexus.get("miserables")
-#' cluster_resolution(g,directed=FALSE,t=1)
+#' cluster_resolution(g,directed=FALSE,t=1,RandomOrder=NULL)
+#' cluster_resolution(g,directed=FALSE,t=1,RandomOrder=FALSE)
+#' cluster_resolution(g,directed=FALSE,t=1,RandomOrder=TRUE)
+#' cluster_resolution(g,directed=FALSE,t=1,RandomOrder=TRUE,rep=10)
 
 
-
-cluster_resolution <- function(graph, t = 1, directed=FALSE)
+cluster_resolution <- function(graph, t = 1, directed=FALSE,RandomOrder=FALSE,rep=1)
 {
 
   if(igraph::is.igraph(graph)){
+    allVertex <- V(graph)$name
     g <- graph
   } else{
+    graph <- as.data.frame(graph)
+    allVertex <- unique(c(graph[,1],graph[,2]))
+    if(length(which(graph[,3]==0))>0){
+      graph <- graph[-which(graph[,3]==0),]}
     g <- igraph::graph.data.frame(graph, directed=directed)
   }
 
@@ -101,7 +111,33 @@ cluster_resolution <- function(graph, t = 1, directed=FALSE)
                              attr=names(igraph::edge.attributes(g)), edges=FALSE, names=TRUE,
                              sparse=FALSE)
 
-  CM <- as.matrix(A)
+
+  sampleorderL <- list()
+  A_L <- list()
+
+  #if RandomOrder is null, we receive the outcome based on order of vertices in graph
+  if(is.null(RandomOrder)){
+    A_L[[1]] <- A
+  } else {
+    #if RandomOrder is TRUE, we receive the outcome based on random order of vertices. If rep > 1 we receive as many outcomes as rep and
+    # the final outcome is this which has the highest value of modularity
+    if(RandomOrder){
+      for(i in 1:rep){
+        sampleorderL[[i]] <- sample(rownames(A))
+        A_L[[i]] <- A[sampleorderL[[i]],]
+        A_L[[i]] <- A_L[[i]][,sampleorderL[[i]]]
+      }
+      sampleorderL <<- sampleorderL
+    } else {
+      #if RandomOrder is FALSE, we receive the outcome based on alphabetical order of vertices
+      A_L[[1]] <- A[order(rownames(A)),]
+      A_L[[1]] <- A_L[[1]][,order(colnames(A))]
+    } }
+
+  NodesGroupsL <- list()
+  for(i in 1:length(A_L)){
+    CM <- as.matrix(A_L[[i]])
+
 
   #Initializing the table that informs about the community number to which a particular node is assigned
   NodesGroups <- data.frame(community=1:nrow(CM))
@@ -161,8 +197,23 @@ cluster_resolution <- function(graph, t = 1, directed=FALSE)
   NodesGroups$community <- as.factor(NodesGroups$community)
   levels(NodesGroups$community) <- 1:length(levels(NodesGroups$community))
   NodesGroups$community <- as.numeric(NodesGroups$community)
+  ## If there are any, we add vertex/vertices which had no neighors (0 value for each pair)
+  if(length(setdiff(allVertex,rownames(NodesGroups)))>0){ NodesGroups <- rbind(NodesGroups,data.frame(community=rep(NA,length(setdiff(allVertex,rownames(NodesGroups))))))
+  rownames(NodesGroups)[which(is.na(NodesGroups$community))] <- setdiff(allVertex,rownames(NodesGroups)) }
 
-  return (NodesGroups)
+  NodesGroupsL[[i]] <- NodesGroups
+  }
+
+  #calculate modularity in order to select the result with the highest value
+  mod <- c()
+  for(i in 1:length(NodesGroupsL)){
+    v <- V(g)$name
+    mod[i] <- igraph::modularity(g,NodesGroupsL[[i]][match(v,rownames(NodesGroupsL[[i]])),1],weights = E(g)$weight) }
+  mod <<-mod
+
+
+  return (NodesGroupsL[[which.max(mod)]])
+
 }
 
 

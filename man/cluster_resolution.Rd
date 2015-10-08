@@ -4,7 +4,8 @@
 \alias{cluster_resolution}
 \title{cluster_resolution}
 \usage{
-cluster_resolution(graph, t = 1, directed = FALSE)
+cluster_resolution(graph, t = 1, directed = FALSE, RandomOrder = FALSE,
+  rep = 1)
 }
 \arguments{
 \item{graph}{An igraph network or a data frame of three columns: source, target, and weights.}
@@ -12,18 +13,28 @@ cluster_resolution(graph, t = 1, directed = FALSE)
 \item{t}{The time-scale parameter of the process which uncovers community structures at different resolutions.}
 
 \item{directed}{Logical. TRUE if the network is directed. Ignored if graph is an igraph object.}
+
+\item{RandomOrder}{If is NULL we receive the outcome based on order of vertices in graph, If is FALSE vertices will be arrange in alphabetical order, othervise vertices will be arrange in random order.}
+
+\item{rep}{If you choose random order of verticles (RandomOrder=TRUE) you can set the number of repetitions and then will be returned the best solution (which will be
+have the highest value of modularity) among these repetitions. In the other cases this parameter is ommited.}
 }
 \value{
 Table with information about community which has been found for each node.
 }
 \description{
 cluster_resolution function has been created based on paper "Laplacian dynamics and Multiscale Modular Structure in Networks" R. Lambiotte et al.
-               Algorithm which finds communities using stability as an objective function to be optimised
-                 in order to find the best partition  of network.
+               Algorithm finds communities using stability as an objective function to be optimised
+                 in order to find the best partition  of network. The number of communities
+                 typically decreases as time grows, from a partition of one-node communities which are as many as nodes when t = 0 to a
+                 two-way partition as t -> inf.
 }
 \examples{
 library(igraph)
 g <- nexus.get("miserables")
-cluster_resolution(g,directed=FALSE,t=1)
+cluster_resolution(g,directed=FALSE,t=1,RandomOrder=NULL)
+cluster_resolution(g,directed=FALSE,t=1,RandomOrder=FALSE)
+cluster_resolution(g,directed=FALSE,t=1,RandomOrder=TRUE)
+cluster_resolution(g,directed=FALSE,t=1,RandomOrder=TRUE,rep=10)
 }
 
