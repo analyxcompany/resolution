@@ -205,15 +205,24 @@ cluster_resolution <- function(graph, t = 1, directed=FALSE,RandomOrder=FALSE,re
   }
 
   #calculate modularity in order to select the result with the highest value
-  mod <- c()
-  for(i in 1:length(NodesGroupsL)){
-    v <- V(g)$name
-    mod[i] <- igraph::modularity(g,NodesGroupsL[[i]][match(v,rownames(NodesGroupsL[[i]])),1],weights = E(g)$weight) }
-  mod <<-mod
 
+  #We obtain the nodes names
+  v <- V(g)$name
 
-  return (NodesGroupsL[[which.max(mod)]])
+  #Now we order each possible solution according to the rownames v
+  NodesGroupsL <- lapply(NodesGroupsL, function(x) x[match(v,rownames(x)),1])
 
+  #We calculate modularity for each possible solution
+  mod <- unlist(lapply(NodesGroupsL, function(x) igraph::modularity(g, x, weights = E(g)$weight)))
+
+  #And finally if the original graph was an igraph object we return just a vector with communities
+  #If graph was data frame, then we return data frame with rownames
+
+  if(igraph::is.igraph(graph)){
+    return (NodesGroupsL[[which.max(mod)]])
+  } else {
+    return(data.frame(community=NodesGroupsL[[which.max(mod)]], row.names = v))
+  }
 }
 
 
