@@ -219,7 +219,15 @@ cluster_resolution <- function(graph, t = 1, directed=FALSE,RandomOrder=FALSE,re
   #If graph was data frame, then we return data frame with rownames
 
   if(igraph::is.igraph(graph)){
-    return (NodesGroupsL[[which.max(mod)]])
+    res <- list()
+    res$membership <- NodesGroupsL[[which.max(mod)]]
+    res$memberships <- matrix(t(do.call(rbind,NodesGroupsL)),nrow=rep,byrow=TRUE)
+    res$modularity <- mod
+    res$names <- V(g)$name
+    res$vcount <- max(res$membership)
+    res$algorithm <- "resolution"
+    class(res) <- "communities"
+    return (res)
   } else {
     return(data.frame(community=NodesGroupsL[[which.max(mod)]], row.names = v))
   }
