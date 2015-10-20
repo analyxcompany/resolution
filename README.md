@@ -69,17 +69,35 @@ cluster_resolution(g,RandomOrder=FALSE)
 cluster_resolution(g,RandomOrder=TRUE)
 cluster_resolution(g,RandomOrder=TRUE,rep=10)
 ```
-The output is a data.frame where in column are communities which have been found for each node. Rownames contains information
-about nodes.
+
+If we use igraph input function the output is a communities object (as returns from algorithms implemented in igraph package). Please look the example below or see the http://igraph.org/r/doc/communities.html to find out what you can do.
+If we use data.frame input we receive single column table with informations about community which has been found for each node. Rownames contains information about nodes.
+
+```R
+c <- cluster_resolution(g,directed=FALSE,t=1,RandomOrder=TRUE,rep=3)
+c$membership  # A numeric vector, one value for each vertex, the id of its community.
+c$memberships # It returns all the obtained results in matrix where columns corespond to the vertices and rows to the repetitions.
+c$modularity  # Vector of modularity for each reperitions.
+c$names       # Names od nodes.
+c$vcount      # How many communities have been founded.
+c$algorithm   # The name of the algorithm that was used to calculate the community structure
+print(c)      # Prints a short summary.
+membership(c) # The (best) membership vector, which had the highest value of modularity.
+modularity(c) # The highest modularity value.
+length(c)     # The number of communities.
+sizes(c)      # Returns the community sizes, in the order of their ids.
+algorithm(c)  # The name of the algorithm that was used to calculate the community structure.
+crossing(c,g) # Returns a logical vector, with one value for each edge, ordered according to the edge ids. The value is TRUE iff the edge connects two different communities, according to the (best) membership vector, as returned by membership().
+
+```
 
 **cluster_resolution_RandomOrderFULL**
 
-In this function we can change the resolution parameter t, number of repetition (the default is 10) or directed parameter if the graph is directed.
+In this function we can change the resolution parameter t, number of repetition (the default is 10) or directed parameter if the graph is directed. You can use it in both cases (igraph or data.frame input) and the output is four-element list containing: table with each outcome, modularity for each outcome, the best clustering (partition which has the highest value of modularity), the value of modularity fot the best clustering.
 
 ```R
 cluster_resolution_RandomOrderFULL(g)
 cluster_resolution_RandomOrderFULL(g,t=0.5)
 cluster_resolution_RandomOrderFULL(g,rep=20)
 ```
-The output is four-element list containing: table with each outcome, modularity for each outcome, the best clustering (partition which has the highest value of modularity), the value of modularity fot the best clustering.
 
