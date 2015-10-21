@@ -97,7 +97,7 @@ Delta<- function(A,Adj,Com1,Com2)
 #' c$membership  # A numeric vector, one value for each vertex, the id of its community.
 #' c$memberships # It returns all the obtained results in matrix where columns corespond to the vertices and rows to the repetitions.
 #' c$modularity  # Vector of modularity for each reperitions.
-#' c$names       # Names od nodes.
+#' c$names       # Names of nodes.
 #' c$vcount      # How many communities have been founded.
 #' c$algorithm   # The name of the algorithm that was used to calculate the community structure
 #' print(c)      # Prints a short summary.
