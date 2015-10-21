@@ -1,3 +1,75 @@
+
+#' Erase
+#' @description Function for the modification of the f.i. adjacency matrix resulting from merging communities OldCom and NewCom,
+#' the row and column corresponding to OldCom are erased.
+#' @param A Matrix which will be modified.
+#' @param OldCom the community which the node have been.
+#' @param NewCom the community which the node moved to.
+
+
+Erase <- function(A,OldCom,NewCom)
+{
+  A[NewCom,] <- A[NewCom,]+ A[OldCom,]
+  A[NewCom,NewCom] <- A[NewCom,NewCom] + A[OldCom,OldCom]
+  A[,NewCom] <- A[NewCom,]
+  return(A[-which(rownames(A)==OldCom),-which(colnames(A)==OldCom)])
+}
+
+#' NewNodesGroup
+#' @description Updates table NodesGroups.
+#' @param OldCom the community which the node have been.
+#' @param NewCom the community which the node moved to.
+#' @param NodesGroups table stores the number of the community to which a particular node is currently assigned.
+
+NewNodesGroup <- function(OldCom,NewCom,NodesGroups)
+{
+  OldNumber <- NodesGroups[OldCom,"community"]
+  NewNumber <- NodesGroups[NewCom,"community"]
+  NodesGroups[which(NodesGroups$community==OldNumber),"community"] <- NewNumber
+
+  return(NodesGroups)
+}
+
+#' Exp_matrix
+#' @description Function for creating the matrix e^(t(B-I))k_j which is needed to computed stability.
+#' @param A Adjacency matrix
+#' @param p resolution parameter t
+
+Exp_matrix <- function(A,p)
+{
+
+  v <- colSums(A)
+  v[which(v==0)] <- min(v[v!=0])/1000
+  B <- as.matrix(A) %*% diag(1/v)
+
+  Adj <- as.matrix(expm::expm(p*(B-diag(1,nrow(B))),method = "Pade",order = 8))
+  Adj <- Adj %*% diag(colSums(A))
+
+}
+
+#' Delta
+#'  @description Computes value Delta(R_NL) for each neighbor at the same time and returned vector delta with these values.
+#'
+#' Delta(R_NL) evaluates the change of stability (R_NL) by removing Com1 from its community and
+#' then by moving it into a neighbouring community. The node Com1 is then in cluster_resolution algotithm placed in the community for which
+#' this gain is maximum, but only if this gain is positive.
+#' @param A Adjacency matrix
+#' @param Adj Matrix calxulated from pattern e^(t(B-I))k_j
+#' @param Com1 node which is considered to change the community
+#' @param Com2 neighbors of node Com2
+
+Delta<- function(A,Adj,Com1,Com2)
+{
+
+  k_i_in <- Adj[Com1,Com2]
+  m <- sum(A)/2
+  if(length(Com2)==1){ S_tot <- sum(A[Com2,]) } else { S_tot <- rowSums(A[Com2,])}
+  k_i <- sum(A[Com1,])
+
+  return (k_i_in/(m) -(k_i *S_tot)/(2*(m^2)) )
+}
+
+
 #' cluster_resolution
 #'
 #' @description   cluster_resolution function has been created based on paper "Laplacian dynamics and Multiscale Modular Structure in Networks" R. Lambiotte et al.
@@ -11,8 +83,7 @@
 #' @param RandomOrder If is NULL we receive the outcome based on order of vertices in graph, If is FALSE vertices will be arrange in alphabetical order, othervise vertices will be arrange in random order.
 #' @param rep If you choose random order of verticles (RandomOrder=TRUE) you can set the number of repetitions and then will be returned the best solution (which will be
 #' have the highest value of modularity) among these repetitions. In the other cases this parameter is ommited.
-#' @return If we use igraph input function returns a communities object (as algorithms implemented in igraph package). Please look the example (*) or see the \url{http://igraph.org/r/doc/communities.html} to find out what you can do.
-#'         If we use data.frame input we receive single column table with informations about community which has been found for each node. The rownames are names of nodes.
+#' @return Table with information about community which has been found for each node.
 #' @examples
 #' library(igraph)
 #' g <- nexus.get("miserables")
@@ -20,21 +91,8 @@
 #' cluster_resolution(g,directed=FALSE,t=1,RandomOrder=FALSE)
 #' cluster_resolution(g,directed=FALSE,t=1,RandomOrder=TRUE)
 #' cluster_resolution(g,directed=FALSE,t=1,RandomOrder=TRUE,rep=10)
-#' # example (*):
-#' c <- cluster_resolution(g,directed=FALSE,t=1,RandomOrder=TRUE,rep=3)
-#' c$membership  # A numeric vector, one value for each vertex, the id of its community.
-#' c$memberships # It returns all the obtained results in matrix where columns corespond to the vertices and rows to the repetitions.
-#' c$modularity  # Vector of modularity for each reperitions.
-#' c$names       # Names of nodes.
-#' c$vcount      # How many communities have been founded.
-#' c$algorithm   # The name of the algorithm that was used to calculate the community structure
-#' print(c)      # Prints a short summary.
-#' membership(c) # The (best) membership vector, which had the highest value of modularity.
-#' modularity(c) # The highest modularity value.
-#' length(c)     # The number of communities.
-#' sizes(c)      # Returns the community sizes, in the order of their ids.
-#' algorithm(c)  # The name of the algorithm that was used to calculate the community structure.
-#' crossing(c,g) # Returns a logical vector, with one value for each edge, ordered according to the edge ids. The value is TRUE iff the edge connects two different communities, according to the (best) membership vector, as returned by membership().
+
+
 cluster_resolution <- function(graph, t = 1, directed=FALSE,RandomOrder=FALSE,rep=1)
 {
 
