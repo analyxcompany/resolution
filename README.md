@@ -89,7 +89,9 @@ crossing(c,g) # Returns a logical vector, with one value for each edge, ordered 
 
 **cluster_resolution_RandomOrderFULL**
 
-In this function we can change the resolution parameter t, the number of repetition (the default is 10) or directed parameter if the graph is directed. You can use it in both cases (igraph or data.frame input) and the output is four-element list containing: table with each outcome, modularity for each outcome, the best clustering (partition which has the highest value of modularity), the value of modularity fot the best clustering.
+In this function we can change the resolution parameter t, the number of repetition (the default is 10) or directed parameter if the graph is directed. You can use it in both cases (igraph or data.frame input) and the output is four-element list containing: 
+
+table with each outcome, modularity for each outcome, the best clustering (partition which has the highest value of modularity), the value of modularity fot the best clustering.
 
 ```R
 cluster_resolution_RandomOrderFULL(g)
