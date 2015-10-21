@@ -1,7 +1,7 @@
 # resolution
 This is the R implementation of an algorithm to find communities in networks with resolution parameter based on the article ["Laplacian dynamics and Multiscale Modular Structure in Networks" R. Lambiotte et al.](http://arxiv.org/pdf/0812.1770.pdf)
 
-The algorithm in the function **cluster_resolution** detects clusters using stability as an objective function to be optimised in order to find the best partition of network. The number of clusters typically decreases as the resolution parameter (t) grows, from a partition of one-node communities which are as many as nodes when t = 0 to a two-way partition as.
+The algorithm in the function **cluster_resolution** detects clusters using stability as an objective function to be optimised in order to find the best partition of network. The number of clusters typically decreases as the resolution parameter (t) grows, from a partition of one-node communities which are as many as nodes when t = 0 to a two-way partition as t grows.
 
 Because of fact that the result of the algorithm depends on the order in which the nodes are considered, we have introduced the parameter RandomOrder. When RandomOrder is NULL the order of vertices come from the graph, if is FALSE vertices will be arranged in alphabetical order, and if is TRUE vertices will be arrange in random order. In the case of a choice random order you can set the number of repetitions (rep patameter) and then the best solution (which will have the highest value of modularity) among these repetitions will be returned. 
 
