@@ -107,8 +107,6 @@ Delta<- function(A,Adj,Com1,Com2)
 #' sizes(c)      # Returns the community sizes, in the order of their ids.
 #' algorithm(c)  # The name of the algorithm that was used to calculate the community structure.
 #' crossing(c,g) # Returns a logical vector, with one value for each edge, ordered according to the edge ids. The value is TRUE iff the edge connects two different communities, according to the (best) membership vector, as returned by membership().
-
-
 cluster_resolution <- function(graph, t = 1, directed=FALSE,RandomOrder=FALSE,rep=1)
 {
 
