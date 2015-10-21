@@ -37,7 +37,6 @@ cluster_resolution(g,directed=FALSE,t=1,RandomOrder=NULL)
 cluster_resolution(g,directed=FALSE,t=1,RandomOrder=FALSE)
 cluster_resolution(g,directed=FALSE,t=1,RandomOrder=TRUE)
 cluster_resolution(g,directed=FALSE,t=1,RandomOrder=TRUE,rep=10)
-
 # example (*):
 c <- cluster_resolution(g,directed=FALSE,t=1,RandomOrder=TRUE,rep=3)
 c$membership  # A numeric vector, one value for each vertex, the id of its community.
