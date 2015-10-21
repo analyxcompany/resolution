@@ -23,7 +23,7 @@ After installation the package is loaded as usual with:
 library(resolution)
 ```
 
-This implementation accepts as inputs an `igraph` object or a data frame.
+This implementation accepts as input an `igraph` object or a data frame.
 
 **igraph input**
 
