@@ -20,14 +20,15 @@ cluster_resolution(graph, t = 1, directed = FALSE, RandomOrder = FALSE,
 have the highest value of modularity) among these repetitions. In the other cases this parameter is ommited.}
 }
 \value{
-Table with information about community which has been found for each node.
+If we use igraph input function returns a "communities" class object (as the cluster algorithms implemented in igraph package return). Please look the example (*) or see the \url{http://igraph.org/r/doc/communities.html} to find out what you can do.
+        If we use data.frame input we receive single column table with informations about community which has been found for each node. Rownames contains information about nodes.
 }
 \description{
 cluster_resolution function has been created based on paper "Laplacian dynamics and Multiscale Modular Structure in Networks" R. Lambiotte et al.
                Algorithm finds communities using stability as an objective function to be optimised
                  in order to find the best partition  of network. The number of communities
-                 typically decreases as time grows, from a partition of one-node communities which are as many as nodes when t = 0 to a
-                 two-way partition as t -> inf.
+                 typically decreases as the resolution parameter (t) grows, from a partition of one-node communities which are as many as nodes when t = 0 to a
+                 two-way partition as t grows.
 }
 \examples{
 library(igraph)
@@ -36,5 +37,21 @@ cluster_resolution(g,directed=FALSE,t=1,RandomOrder=NULL)
 cluster_resolution(g,directed=FALSE,t=1,RandomOrder=FALSE)
 cluster_resolution(g,directed=FALSE,t=1,RandomOrder=TRUE)
 cluster_resolution(g,directed=FALSE,t=1,RandomOrder=TRUE,rep=10)
+
+ # example (*):
+c <- cluster_resolution(g,directed=FALSE,t=1,RandomOrder=TRUE,rep=3)
+c$membership  # A numeric vector, one value for each vertex, the id of its community.
+c$memberships # It returns all the obtained results in matrix where columns corespond to the vertices and rows to the repetitions.
+c$modularity  # Vector of modularity for each reperitions.
+c$names       # Names od nodes.
+c$vcount      # How many communities have been founded.
+c$algorithm   # The name of the algorithm that was used to calculate the community structure
+print(c)      # Prints a short summary.
+membership(c) # The (best) membership vector, which had the highest value of modularity.
+modularity(c) # The highest modularity value.
+length(c)     # The number of communities.
+sizes(c)      # Returns the community sizes, in the order of their ids.
+algorithm(c)  # The name of the algorithm that was used to calculate the community structure.
+crossing(c,g) # Returns a logical vector, with one value for each edge, ordered according to the edge ids. The value is TRUE iff the edge connects two different communities, according to the (best) membership vector, as returned by membership()
 }
 
