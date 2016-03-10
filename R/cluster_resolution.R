@@ -123,11 +123,15 @@ cluster_resolution <- function(graph, t = 1, directed=FALSE,RandomOrder=FALSE,re
       graph <- graph[-which(graph[,3]==0),]}
     g <- igraph::graph.data.frame(graph, directed=directed)
   }
-
+  
+  if(length(names(igraph::edge.attributes(g)))==0){
+    attr_g <- NULL
+  } else {
+    attr_g <- names(igraph::edge.attributes(g))
+  }
   A <- igraph::get.adjacency(g, type="both",
-                             attr=names(igraph::edge.attributes(g)), edges=FALSE, names=TRUE,
+                             attr=attr_g, edges=FALSE, names=TRUE,
                              sparse=FALSE)
-
 
   sampleorderL <- list()
   A_L <- list()
